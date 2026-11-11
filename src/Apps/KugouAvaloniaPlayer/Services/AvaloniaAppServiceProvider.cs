@@ -98,6 +98,7 @@ public sealed partial class AvaloniaAppServiceProvider
         .Bind<ITransitionAnalysisService>().As(Singleton).To<ManagedBassTransitionAnalysisService>()
         .Bind<PlayerViewModel>().As(Singleton).To<PlayerViewModel>()
         .Bind<IPlaybackCommands>().To((PlayerViewModel playerViewModel) => playerViewModel)
+        .Bind<ScheduleService>().As(Singleton).To<ScheduleService>()
 
         .Bind<LoginViewModel>().To<LoginViewModel>()
         .Bind<SearchViewModel>().As(Singleton).To<SearchViewModel>()
@@ -134,4 +135,5 @@ internal readonly record struct DesktopAppRoot(
     IGlobalShortcutService GlobalShortcutService,
     ISystemMediaSessionService SystemMediaSessionService,
     ITaskbarLyricsService TaskbarLyricsService,
-    IStartupActivationServer StartupActivationServer);
+    IStartupActivationServer StartupActivationServer,
+    ScheduleService ScheduleService);
