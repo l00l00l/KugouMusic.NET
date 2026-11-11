@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace KugouAvaloniaPlayer.Services;
 
@@ -58,6 +59,19 @@ public sealed class ScheduleService : IDisposable
         _timer = new PeriodicTimer(
             TimeSpan.FromSeconds(10));
 
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await CheckScheduleAsync();
+            }
+            catch (Exception ex)
+            {
+                WriteDebugLog(
+                    $"Initial Check Failed: {ex}");
+            }
+        });
+
         _ = RunAsync(_cts.Token);
     }
 
@@ -87,6 +101,8 @@ public sealed class ScheduleService : IDisposable
 
     private async Task CheckScheduleAsync()
     {
+        WriteDebugLog(
+            $"CheckSchedule {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         var config = LoadConfig();
 
         if (config == null)
@@ -104,6 +120,14 @@ public sealed class ScheduleService : IDisposable
         {
             if (!task.Enabled)
                 continue;
+
+            if (task.WeekDays.Count == 0)
+            {
+                WriteDebugLog(
+                    $"Task [{task.Name}] WeekDays Empty");
+
+                continue;
+            }
 
             if (!task.WeekDays.Contains(currentDay))
                 continue;
@@ -123,7 +147,14 @@ public sealed class ScheduleService : IDisposable
             WriteDebugLog(
                 $"Task Triggered: {task.Name}");
 
+            var sw = Stopwatch.StartNew();
+
             await ExecuteTaskAsync(task);
+
+            sw.Stop();
+
+            WriteDebugLog(
+                $"Task Complete: {task.Name}, Cost={sw.ElapsedMilliseconds}ms");
         }
 
         CleanupExecutedTasks();
@@ -132,6 +163,8 @@ public sealed class ScheduleService : IDisposable
     private async Task<string?> FindPlaylistIdAsync(
     string playlistName)
     {
+        playlistName =
+            playlistName.Trim();
         try
         {
             var playlists =
@@ -188,6 +221,9 @@ public sealed class ScheduleService : IDisposable
 
                 break;
         }
+
+        WriteDebugLog(
+            $"Task Complete: {task.Name}");
     }
 
     private async Task ExecutePlayTaskAsync(
@@ -280,6 +316,10 @@ public sealed class ScheduleService : IDisposable
                     $"Set Volume={task.Volume}");
             }
 
+            _playbackCommands.Stop();
+
+            await Task.Delay(1000);
+
             await _playbackCommands.ReplaceQueueAsync(
                 songs,
                 songs[0]);
@@ -311,6 +351,24 @@ public sealed class ScheduleService : IDisposable
             var logFile = Path.Combine(
                 AppContext.BaseDirectory,
                 "schedule.log");
+
+            if (File.Exists(logFile))
+            {
+                var info = new FileInfo(logFile);
+
+                if (info.Length > 10 * 1024 * 1024)
+                {
+                    var backup =
+                        logFile + ".bak";
+
+                    File.Copy(
+                        logFile,
+                        backup,
+                        true);
+
+                    File.Delete(logFile);
+                }
+            }
 
             File.AppendAllText(
                 logFile,
