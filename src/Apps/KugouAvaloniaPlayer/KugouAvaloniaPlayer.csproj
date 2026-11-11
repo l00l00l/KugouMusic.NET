@@ -37,7 +37,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="schedule.template.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -52,7 +58,7 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="MemoryPack" />
         <PackageReference Include="Microsoft.Data.Sqlite" Condition="'$(UseSystemSqlite)' != 'true'" />
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Condition="'$(UseSystemSqlite)' != 'true'" />
@@ -64,52 +70,39 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Serilog"/>
-        <PackageReference Include="Serilog.Extensions.Logging"/>
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.Extensions.Logging" />
         <PackageReference Include="Serilog.Sinks.Async" />
-        <PackageReference Include="Serilog.Sinks.Console"/>
-        <PackageReference Include="Serilog.Sinks.Debug"/>
+        <PackageReference Include="Serilog.Sinks.Console" />
+        <PackageReference Include="Serilog.Sinks.Debug" />
         <PackageReference Include="Serilog.Sinks.File" />
-        <PackageReference Include="SukiUI"/>
-        <PackageReference Include="Svg.Controls.Skia.Avalonia"/>
-        <PackageReference Include="System.Security.Cryptography.ProtectedData"/>
-        <PackageReference Include="Tmds.DBus.Protocol"/>
+        <PackageReference Include="SukiUI" />
+        <PackageReference Include="Svg.Controls.Skia.Avalonia" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+        <PackageReference Include="Tmds.DBus.Protocol" />
         <PackageReference Include="Velopack" />
         <PackageReference Include="ZLinq" />
         <PackageReference Include="z440.atl.core" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Libraries\AvaloniaSilkEffects\AvaloniaSilkEffects.csproj"/>
-        <ProjectReference Include="..\..\Libraries\AvaloniaLyrics\AvaloniaLyrics.csproj"/>
-        <ProjectReference Include="..\..\Libraries\SimpleAudio\SimpleAudio.csproj"/>
-        <ProjectReference Include="..\..\Libraries\KuGou.Net\KuGou.Net.csproj"/>
+        <ProjectReference Include="..\..\Libraries\AvaloniaSilkEffects\AvaloniaSilkEffects.csproj" />
+        <ProjectReference Include="..\..\Libraries\AvaloniaLyrics\AvaloniaLyrics.csproj" />
+        <ProjectReference Include="..\..\Libraries\SimpleAudio\SimpleAudio.csproj" />
+        <ProjectReference Include="..\..\Libraries\KuGou.Net\KuGou.Net.csproj" />
     </ItemGroup>
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <Content Include="Assets\*.ico" CopyToOutputDirectory="PreserveNewest" />
-        <Content Include="Native\KugouTaskbarNative.dll"
-                 CopyToOutputDirectory="PreserveNewest"
-                 CopyToPublishDirectory="PreserveNewest"
-                 TargetPath="KugouTaskbarNative.dll"
-                 Condition="Exists('Native\KugouTaskbarNative.dll')" />
-        <Content Include="Native\KugouTaskbarLyrics.exe"
-                 CopyToOutputDirectory="PreserveNewest"
-                 CopyToPublishDirectory="PreserveNewest"
-                 TargetPath="KugouTaskbarLyrics.exe" />
+        <Content Include="Native\KugouTaskbarNative.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="KugouTaskbarNative.dll" Condition="Exists('Native\KugouTaskbarNative.dll')" />
+        <Content Include="Native\KugouTaskbarLyrics.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="KugouTaskbarLyrics.exe" />
     </ItemGroup>
 
     <ItemGroup Condition="Exists('Native/kugou-wayland-lyrics') And ($([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-')) Or ('$(RuntimeIdentifier)' == '' And $([MSBuild]::IsOSPlatform('Linux'))))">
-        <Content Include="Native/kugou-wayland-lyrics"
-                 CopyToOutputDirectory="PreserveNewest"
-                 CopyToPublishDirectory="PreserveNewest"
-                 TargetPath="kugou-wayland-lyrics"
-                 ExcludeFromSingleFile="true" />
-        <Content Include="Native/wayland/**/*"
-                 CopyToOutputDirectory="PreserveNewest"
-                 CopyToPublishDirectory="PreserveNewest"
-                 Link="wayland/%(RecursiveDir)%(Filename)%(Extension)"
-                 ExcludeFromSingleFile="true" />
+        <Content Include="Native/kugou-wayland-lyrics" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="kugou-wayland-lyrics" ExcludeFromSingleFile="true" />
+        <Content Include="Native/wayland/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Link="wayland/%(RecursiveDir)%(Filename)%(Extension)" ExcludeFromSingleFile="true" />
     </ItemGroup>
+
+    
 
     <ItemGroup>
         <Compile Update="Views\MyPlaylistsView.axaml.cs">
@@ -160,4 +153,7 @@
           <DependentUpon>LyricMatchDialog.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
+
+    
+    
 </Project>

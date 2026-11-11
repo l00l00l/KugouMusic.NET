@@ -1,0 +1,29 @@
+{
+  "Tasks": [
+    {
+      "Name": "上班广播",
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "08:00",
+      "Action": 1,
+      "PlaylistName": "123456",
+      "Volume": 80
+    },
+    {
+      "Name": "午休停止",
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "12:00",
+      "Action": 2
+    },
+    {
+      "Name": "下午广播",
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "13:00",
+      "Action": 1,
+      "PlaylistName": "654321",
+      "Volume": 70
+    }
+  ]
+}

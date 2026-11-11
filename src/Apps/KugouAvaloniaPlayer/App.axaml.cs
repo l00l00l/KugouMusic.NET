@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Net.Http;
 using AsyncImageLoader;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -14,10 +11,14 @@ using KugouAvaloniaPlayer.Services.Startup;
 using KugouAvaloniaPlayer.Services.SystemMediaSession;
 using KugouAvaloniaPlayer.ViewModels;
 using KugouAvaloniaPlayer.Views;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
 using SimpleAudio;
 using SukiUI;
+using System;
+using System.IO;
+using System.Net.Http;
 
 namespace KugouAvaloniaPlayer;
 
@@ -59,7 +60,8 @@ public partial class App : Application
                 globalShortcutService,
                 systemMediaSessionService,
                 taskbarLyricsService,
-                startupActivationServer) = ownedRoot.Value;
+                startupActivationServer,
+                scheduleService) = ownedRoot.Value;
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -82,6 +84,7 @@ public partial class App : Application
 
                 mainWindow.Opened += InitializeGlobalShortcuts;
                 startupActivationServer.Start();
+                scheduleService.Start();
                 if (taskbarLyricsService.IsSupported)
                     taskbarLyricsService.SetEnabled(SettingsManager.Settings.EnableTaskbarLyrics);
 
