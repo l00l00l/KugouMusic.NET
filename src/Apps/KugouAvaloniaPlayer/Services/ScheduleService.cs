@@ -103,10 +103,19 @@ public sealed class ScheduleService : IDisposable
     {
         WriteDebugLog(
             $"CheckSchedule {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+
         var config = LoadConfig();
 
         if (config == null)
             return;
+
+        if (!config.Enabled)
+        {
+            WriteDebugLog(
+                "Schedule Disabled");
+
+            return;
+        }
 
         var now = DateTime.Now;
 
@@ -116,28 +125,69 @@ public sealed class ScheduleService : IDisposable
         var currentDay =
             GetWeekDay(now.DayOfWeek);
 
+        var today =
+            now.ToString("yyyy-MM-dd");
+
+        var isHoliday =
+            config.SkipHoliday &&
+            IsHoliday(now, config);
+
+        var isWorkdayOverride =
+            IsWorkdayOverride(now, config);
+
         foreach (var task in config.Tasks)
         {
             if (!task.Enabled)
                 continue;
 
-            if (task.WeekDays.Count == 0)
+            // 节假日跳过（允许任务级覆盖）
+            if (isHoliday &&
+                !isWorkdayOverride &&
+                !task.IgnoreHoliday)
             {
                 WriteDebugLog(
-                    $"Task [{task.Name}] WeekDays Empty");
+                    $"Holiday Skip: {task.Name}");
 
                 continue;
             }
 
-            if (!task.WeekDays.Contains(currentDay))
-                continue;
+            // 指定日期优先
+            if (!string.IsNullOrWhiteSpace(task.SpecificDate))
+            {
+                if (!string.Equals(
+                        task.SpecificDate,
+                        today,
+                        StringComparison.Ordinal))
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                // 普通周循环任务必须检查WeekDays
 
+                if (task.WeekDays.Count == 0)
+                {
+                    WriteDebugLog(
+                        $"Task [{task.Name}] WeekDays Empty");
+
+                    continue;
+                }
+
+                if (!task.WeekDays.Contains(currentDay))
+                    continue;
+            }
+
+            // 时间检查
             if (!string.Equals(
                     task.Time,
                     currentTime,
                     StringComparison.Ordinal))
+            {
                 continue;
+            }
 
+            // 防止一分钟内重复执行
             var taskKey =
                 $"{now:yyyyMMddHHmm}_{task.Name}";
 
@@ -147,9 +197,18 @@ public sealed class ScheduleService : IDisposable
             WriteDebugLog(
                 $"Task Triggered: {task.Name}");
 
-            var sw = Stopwatch.StartNew();
+            var sw =
+                Stopwatch.StartNew();
 
-            await ExecuteTaskAsync(task);
+            try
+            {
+                await ExecuteTaskAsync(task);
+            }
+            catch (Exception ex)
+            {
+                WriteDebugLog(
+                    $"Task Failed: {task.Name} - {ex}");
+            }
 
             sw.Stop();
 
@@ -405,6 +464,25 @@ public sealed class ScheduleService : IDisposable
         }
     }
 
+    private bool IsHoliday(
+    DateTime date,
+    ScheduleConfig config)
+    {
+        var today =
+            date.ToString("yyyy-MM-dd");
+
+        return config.Holidays.Contains(today);
+    }
+
+    private bool IsWorkdayOverride(
+    DateTime date,
+    ScheduleConfig config)
+    {
+        var today =
+            date.ToString("yyyy-MM-dd");
+
+        return config.Workdays.Contains(today);
+    }
     private static int GetWeekDay(
         DayOfWeek day)
     {

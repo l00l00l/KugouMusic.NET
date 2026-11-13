@@ -1,0 +1,53 @@
+{
+  "Enabled": true,
+  "SkipHoliday": true,
+
+  "Holidays": [
+    "2027-01-01",
+    "2027-02-10",
+    "2027-02-11",
+    "2027-02-12"
+  ],
+
+  "Workdays": [
+    "2027-01-09",
+    "2027-02-20"
+  ],
+  "Tasks": [
+    {
+      "Name": "上班广播",
+      "IgnoreHoliday": false,
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "08:00",
+      "Action": 1,
+      "PlaylistName": "123456",
+      "Volume": 80
+    },
+    {
+      "Name": "午休停止",
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "12:00",
+      "Action": 2
+    },
+    {
+      "Name": "下午广播",
+      "Enabled": true,
+      "WeekDays": [ 1, 2, 3, 4, 5 ],
+      "Time": "13:00",
+      "Action": 1,
+      "PlaylistName": "654321",
+      "Volume": 70
+    },
+    {
+      "Name": "元旦广播",
+      "Enabled": true,
+      "SpecificDate": "2027-01-01",
+      "Time": "08:00",
+      "Action": 1,
+      "PlaylistName": "元旦音乐",
+      "Volume": 70
+    }
+  ]
+}
