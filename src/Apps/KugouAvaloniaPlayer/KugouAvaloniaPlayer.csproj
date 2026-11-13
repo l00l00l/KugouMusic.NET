@@ -97,16 +97,7 @@
         <Content Include="Native\KugouTaskbarLyrics.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="KugouTaskbarLyrics.exe" />
     </ItemGroup>
 
-<<<<<<< HEAD
-=======
-    <ItemGroup Condition="Exists('Native/kugou-wayland-lyrics') And ($([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-')) Or ('$(RuntimeIdentifier)' == '' And $([MSBuild]::IsOSPlatform('Linux'))))">
-        <Content Include="Native/kugou-wayland-lyrics" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="kugou-wayland-lyrics" ExcludeFromSingleFile="true" />
-        <Content Include="Native/wayland/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Link="wayland/%(RecursiveDir)%(Filename)%(Extension)" ExcludeFromSingleFile="true" />
-    </ItemGroup>
 
-    
-
->>>>>>> 8ebfe6a (v1)
     <ItemGroup>
         <Compile Update="Views\MyPlaylistsView.axaml.cs">
             <DependentUpon>MyPlaylistsView.axaml</DependentUpon>
