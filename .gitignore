@@ -375,3 +375,5 @@ FodyWeavers.xsd
 
 .idea/
 KugouMusic.NET.sln.DotSettings.user
+publish-noaot/
+publish/
