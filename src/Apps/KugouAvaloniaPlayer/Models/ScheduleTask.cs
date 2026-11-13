@@ -44,7 +44,17 @@ public sealed class ScheduleTask
     /// </summary>
     public string? PlaylistName { get; set; }
 
+    /// <summary>
+    /// 指定日期
+    /// 格式：yyyy-MM-dd
+    /// 为空表示按WeekDays执行
+    /// </summary>
+    public string? SpecificDate { get; set; }
 
+    /// <summary>
+    /// 是否忽略节假日
+    /// </summary>
+    public bool IgnoreHoliday { get; set; }
     /// <summary>
     /// 音量
     /// 0-100
